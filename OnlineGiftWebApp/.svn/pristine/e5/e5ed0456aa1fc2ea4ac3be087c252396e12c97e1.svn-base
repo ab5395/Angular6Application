@@ -1,0 +1,62 @@
+﻿
+namespace OnlineGiftWebApp.Web.Models
+{
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
+    public class ConfirmEmailResponseModel
+    {
+        public string Email { get; set; }
+
+        public string ResetCode { get; set; }
+    }
+
+    public class LoginModel
+    {
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+    }
+
+    public class RegisterModel
+    {
+       // [Required]
+        public string FirstName { get; set; }
+
+        //[Required]
+        public string LastName { get; set; }
+
+      //  public string ProfilePic { get; set; }
+
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        [Required]
+        public string Location { get; set; }
+
+        //public DateTime? Birthdate { get; set; }
+
+        [Required]
+        public string Role { get; set; }
+    }
+
+    public class SetPasswordViewModel
+    {
+        [Required]
+        public string UserName { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        public string Code { get; set; }
+    }
+}

@@ -1,0 +1,185 @@
+/* You can add global styles to this file, and also import other style files */
+/*
+  Responsive CSS
+*/
+
+@media (min-width: 1024px) and (max-width: 1170px){
+	.fixed-menu{
+		min-height: 96px !important;
+	}
+	.login-main-bg{
+		padding-top: 8rem;
+	}
+	.header-fixed-height{
+		min-height: 96px !important;
+	}
+	.aboutus-bg{
+		padding-top: 6rem !important;
+	}
+	.insta-post-img{
+		height: 130px !important;
+	}
+	.insta-post-img img{
+		height: 130px !important;
+	}
+}
+
+@media (min-width: 767px) and (max-width: 1024px){
+	.footer-success-line-count{
+		font-size: 26px;
+	}
+	.footer-success-line-text{
+		font-size: 16px;
+	}
+	
+	.fixed-menu{
+	  min-height: 130px;
+	}
+	.header-fixed-height{
+	  height: 130px;
+	}
+	.slide-play-icon-tag-line span{
+		font-size: 27px;
+	}
+	.header-light,
+	.fixed-menu{
+		background-color: rgba(34,31,45,0.8) !important;
+	}
+	.slider-conatain-heading{
+		padding-top: 10rem;
+	}
+	.aboutus-bg{
+		padding-top: 8.3rem;
+	}
+	.heading{
+		font-size: 23px;
+	}
+	.insta-post-img{
+		height: 90px;
+	}
+	.insta-post-img img{
+		height: 90px;
+	}
+}
+@media screen and (max-width: 767px){
+	.font-size-xs-13px{
+		font-size: 13px !important;
+	}
+	.fixed-menu{
+	  min-height: 120px;
+	}
+	.login-main-bg{
+		padding-top: 10rem;
+	}
+	.header-fixed-height{
+	  height: 120px;
+	}
+	.slider-icon-contain{
+		font-size: 16px;
+		font-weight: 300;
+	}
+	.slider-side-shape:after{
+		background-image: url(./assets/images/mobile-shape.png);
+	}
+	.slider-conatain-heading{
+		font-size: 30px;
+	}
+	.slider-conatain-heading-tag{
+		font-size: 12px;
+	}
+	
+	.slider-icon{
+		height: 80px;
+		width: 80px;
+	}
+	.slider-icon-height img{
+		height: 20px;
+	}
+	.slider-icon-height-change img{
+		height: 30px;
+	}
+	.header-light,
+	.fixed-menu{
+		background-color: rgba(34,31,45,0.7);
+	}
+	.slide-play-icon-width{
+		width: 100%;
+		text-align: center;
+	}
+	.slide-play-icon-tag-line{
+		width: 100%;
+		text-align: center;
+		font-size: 20px;
+	}
+	.footer-success-line-count{
+		font-size: 26px;
+	}
+	.footer-success-line-text{
+		font-size: 14px;
+	}
+	.slider-side-shape{
+		padding-bottom: 50px;
+	}
+	.padding-xs-0{
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	.aboutus-bg{
+		padding-top: 8rem;
+	}
+	.aboutus-img{
+		height: 196px;
+	}
+	.aboutus-img img{
+		min-height: 196px;
+	}
+	.review-bg{
+		background-size: cover;
+	}
+}
+@media (min-width: 480px) and (max-width: 767px){
+
+	.slider-conatain-heading{
+		padding-top: 9rem;
+	}
+}
+@media screen and (max-width: 480px){
+	.display-xs-none{
+		display: none !important;
+	}
+	.bg-image-logo{
+		opacity: 0.9;
+		padding-top: 1rem;
+	}
+	.bg-image-content{
+		font-size: 30px !important;
+	}
+	.slider-conatain-heading{
+		padding-top: 9rem;
+	}
+	.slide-play-icon-tag-line span{
+		display: block;
+	}
+	.aboutus-img{
+		height: 145px;
+	}
+	.aboutus-img img{
+		min-height: 145px;
+	}
+	.insta-post-img{
+		height: 142px ;
+	}
+	.insta-post-img img{
+		height: 142px ;
+	}
+}
+@media screen and (max-width: 320px){
+	.insta-post-img{
+		height: 115px ;
+	}
+	.insta-post-img img{
+		height: 115px ;
+	}
+}
+
+

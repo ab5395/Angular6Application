@@ -1,0 +1,53 @@
+<!-- <div class="button-row">
+  <a class="btn btn-primary" [routerLink]="['/account/login']">Login</a>
+  <a class="btn btn-primary" [routerLink]="['/account/register']">Register</a>
+  <br>
+  <br>
+</div> -->
+
+<div class="container-fluid fixed-menu" >
+  <div class="container px-0 px-sm-3">
+    <nav class="navbar navbar-expand-lg px-0 ">
+      <a class="navbar-brand mr-5" href="#"><img src="../../assets/images/white-logo.png" class="menu-logo" alt="Pyarana" /></a>
+      <button class="navbar-toggler menu-toogle-btn" (click)="isCollapsed = !isCollapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fa fa-bars"></i>
+      </button>
+      <div class="d-block d-lg-none w-100 text-right">
+       <a class="btn btn-outline-info px-3 mr-2 font-size-xs-13px" [routerLink]="['/account/register']">Register</a>
+       <a class="btn btn-info px-3 font-size-xs-13px" [routerLink]="['/account/login']" >Login</a>
+     </div>
+
+     <div class="collapse navbar-collapse" [ngbCollapse]="isCollapsed"  id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto main-menu">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/aboutus']">About Pyarana</a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link " href="#">
+            How it works
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Express Love</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Check Response</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/contactus']">Contact Us </a>
+        </li>
+        
+      </ul>
+      <form class="d-none d-lg-inline-block">
+        <a class="btn btn-outline-dark text-white px-3 my-2 my-sm-0 mr-2" [routerLink]="['/account/register']" >Register</a>
+        <a class="btn btn-dark px-3 my-2 my-sm-0" [routerLink]="['/account/login']"  >Login</a>
+      </form>
+    </div>
+    
+  </nav>
+</div>
+</div>
+
