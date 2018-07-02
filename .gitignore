@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/OnlineGiftWebApp/OnlineGiftWebApp.Service/obj
+/OnlineGiftWebApp/OnlineGiftWebApp.TokenHelper/obj
+/OnlineGiftWebApp/OnlineGiftWebApp.Web/obj/Release/netcoreapp2.0

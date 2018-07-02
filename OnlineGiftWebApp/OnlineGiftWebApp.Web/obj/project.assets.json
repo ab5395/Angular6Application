@@ -14107,23 +14107,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\bajay\\.nuget\\packages\\": {},
+    "C:\\Users\\mvimal.NAROLA\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\OnlineGiftWebApp\\OnlineGiftWebApp.Web\\OnlineGiftWebApp.Web.csproj",
+      "projectUniqueName": "E:\\vmi\\OnlineGiftWebApp\\OnlineGiftWebApp.Web\\OnlineGiftWebApp.Web.csproj",
       "projectName": "OnlineGiftWebApp.Web",
-      "projectPath": "D:\\Projects\\OnlineGiftWebApp\\OnlineGiftWebApp.Web\\OnlineGiftWebApp.Web.csproj",
-      "packagesPath": "C:\\Users\\bajay\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\OnlineGiftWebApp\\OnlineGiftWebApp.Web\\obj\\",
+      "projectPath": "E:\\vmi\\OnlineGiftWebApp\\OnlineGiftWebApp.Web\\OnlineGiftWebApp.Web.csproj",
+      "packagesPath": "C:\\Users\\mvimal.NAROLA\\.nuget\\packages\\",
+      "outputPath": "E:\\vmi\\OnlineGiftWebApp\\OnlineGiftWebApp.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\bajay\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\mvimal.NAROLA\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -14131,20 +14131,19 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "http://nuget.syncfusion.com/nuget_aspnetcore/nuget/getsyncfusionpackages/aspnetcore": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {
-            "D:\\Projects\\OnlineGiftWebApp\\OnlineGiftWebApp.Data\\OnlineGiftWebApp.Data.csproj": {
-              "projectPath": "D:\\Projects\\OnlineGiftWebApp\\OnlineGiftWebApp.Data\\OnlineGiftWebApp.Data.csproj"
+            "E:\\vmi\\OnlineGiftWebApp\\OnlineGiftWebApp.Data\\OnlineGiftWebApp.Data.csproj": {
+              "projectPath": "E:\\vmi\\OnlineGiftWebApp\\OnlineGiftWebApp.Data\\OnlineGiftWebApp.Data.csproj"
             },
-            "D:\\Projects\\OnlineGiftWebApp\\OnlineGiftWebApp.Service\\OnlineGiftWebApp.Service.csproj": {
-              "projectPath": "D:\\Projects\\OnlineGiftWebApp\\OnlineGiftWebApp.Service\\OnlineGiftWebApp.Service.csproj"
+            "E:\\vmi\\OnlineGiftWebApp\\OnlineGiftWebApp.Service\\OnlineGiftWebApp.Service.csproj": {
+              "projectPath": "E:\\vmi\\OnlineGiftWebApp\\OnlineGiftWebApp.Service\\OnlineGiftWebApp.Service.csproj"
             },
-            "D:\\Projects\\OnlineGiftWebApp\\OnlineGiftWebApp.TokenHelper\\OnlineGiftWebApp.TokenHelper.csproj": {
-              "projectPath": "D:\\Projects\\OnlineGiftWebApp\\OnlineGiftWebApp.TokenHelper\\OnlineGiftWebApp.TokenHelper.csproj"
+            "E:\\vmi\\OnlineGiftWebApp\\OnlineGiftWebApp.TokenHelper\\OnlineGiftWebApp.TokenHelper.csproj": {
+              "projectPath": "E:\\vmi\\OnlineGiftWebApp\\OnlineGiftWebApp.TokenHelper\\OnlineGiftWebApp.TokenHelper.csproj"
             }
           }
         }
