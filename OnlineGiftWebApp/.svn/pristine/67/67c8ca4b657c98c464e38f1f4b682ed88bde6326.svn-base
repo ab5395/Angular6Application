@@ -1,0 +1,78 @@
+import { Component, OnInit, HostListener, Inject } from '@angular/core';
+import { Router } from "@angular/router";
+import { DOCUMENT } from "@angular/platform-browser";
+import { LoginService } from '../../account/login/login.service';
+import { AppConfig } from '../../app.config';
+import { CurrUser } from '../../shared/models/curruser.model';
+import { AppRoute } from '../../shared/AppRoute';
+
+@Component({
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css'],
+  providers: [LoginService]
+})
+export class HeaderComponent implements OnInit {
+  appConfig: AppConfig = new AppConfig();
+  isLoggedIn: boolean = false;
+  currUser: CurrUser;
+  isProgressVisible: boolean = false;
+  isBtnDisabled: boolean = false;
+
+  loginUrl: string = AppRoute.login;
+  registerUrl: string = AppRoute.register;
+  public navIsFixed: boolean = false;
+  constructor(public router: Router, @Inject(DOCUMENT) private document: any, private service: LoginService) { }
+
+  @HostListener('window:scroll', [ ])
+
+    onWindowScroll(){
+      const number = window.pageYOffset || 
+      document.documentElement.scrollTop || 
+      document.body.scrollTop || 0;
+      if (number > 50) {
+        this.navIsFixed = true;
+      } else if (this.navIsFixed && number < 10) {
+      this.navIsFixed = false;
+      }
+    }
+  // constructor() { }
+
+  ngOnInit() {
+    this.verifyLogin();
+  }
+
+  verifyLogin() {
+    this.isBtnDisabled = false;
+    this.currUser = this.appConfig.getCurrentUser();
+    if (this.currUser === null) {
+      this.isProgressVisible = false;
+      this.isLoggedIn = false;
+    }
+    else {
+      this.isProgressVisible = true;
+      this.service.checkAlreadyLoggedIn().subscribe(res => {
+        console.log(res);
+        if (res.status === true)
+          this.isLoggedIn = true;
+        else
+          this.isLoggedIn = false;
+        this.isProgressVisible = false;
+      });
+    }
+  }
+
+  onLogout() {
+    this.isProgressVisible = true;
+    this.isBtnDisabled = true;
+
+    this.service.doLogout().subscribe(res => {
+        this.appConfig.removeCurrentUser();
+        if (res.status === true) {
+            this.isBtnDisabled = true;
+            this.verifyLogin();
+        }
+    });
+}
+
+}

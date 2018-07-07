@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var home_component_1 = require("../../user/home/home.component");
+var aboutus_component_1 = require("../../user/aboutus/aboutus.component");
+var contactus_component_1 = require("../../user/contactus/contactus.component");
+var AppRoute_1 = require("../../shared/AppRoute");
+exports.User_Routes = [
+    { path: AppRoute_1.AppRoute.home, component: home_component_1.HomeComponent },
+    { path: AppRoute_1.AppRoute.aboutus, component: aboutus_component_1.AboutusComponent },
+    { path: AppRoute_1.AppRoute.contactus, component: contactus_component_1.ContactusComponent }
+];
+//# sourceMappingURL=user.layout.route.js.map

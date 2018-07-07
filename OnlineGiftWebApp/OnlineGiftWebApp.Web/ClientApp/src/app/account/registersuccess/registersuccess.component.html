@@ -1,0 +1,25 @@
+<div class="container-fluid login-main-bg d-flex w-100">
+  <div class="container align-self-center ">
+    <div fxLayout="row wrap" class="justify-content-center ">
+      <div fxFlex="35%" fxFlex.xs="100%" fxFlex.sm="100%">
+
+        <div fxLayout="row wrap" class="login-box">
+          <div fxFlex="100%" class="bg-white order-xs-2">
+            <div class="login-form">
+              <div class="text-center mb-2 mt-3 d-xs-none">
+                <img src="../../assets/images/logo.png" class="d-inline-block login-logo" alt="Pyarana" />
+              </div>
+              <p class="text-center mb-3 text-muted pt-3 pt-sm-0">Registration</p>
+              <h6 class="text-center text-muted pb-3 register-success-msg">
+                User Created Successfully.Please Check your Email to confirm your account.
+              </h6>
+              <div class="text-center mb-3">
+                <a mat-raised-button color="primary" [routerLink]="['/account/login']" class="w-100 text-white font-size-16px font-weight-400">back to Login</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,359 @@
+﻿
+namespace OnlineGiftWebApp.Web.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Net;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
+    using OnlineGiftWebApp.Data;
+    using OnlineGiftWebApp.Services.Utils;
+    using OnlineGiftWebApp.TokenHelper;
+    using OnlineGiftWebApp.Web.Models;
+    using OnlineGiftWebApp.Services.Models;
+    using System.IO;
+
+    [Produces("application/json")]
+    [Route("api/Account")]
+    public class AccountController : Controller
+    {
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly JsonResponse _jsonResponse;
+        private readonly EmailService _emailService;
+        private readonly IHttpContextAccessor _httpContext;
+        private AppCommon _appCommon;
+
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, IHttpContextAccessor httpContext, IOptions<EmailSettings> emailSettings)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
+            _jsonResponse = new JsonResponse();
+            _httpContext = httpContext;
+            _emailService = new EmailService(emailSettings);
+            _appCommon = new AppCommon();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Register")]
+        public async Task<IActionResult> Register([FromBody]RegisterModel registerModel)
+        {
+            try
+            {
+                //var stringList = new List<string>() { "Admin", "User" };
+                //foreach (var item in stringList)
+                //{
+                //    await _roleManager.CreateAsync(new IdentityRole(item));
+                //}
+                if (!ModelState.IsValid)
+                    return _jsonResponse.GenerateJsonResult(false, ErrorMessage.InvalidModel);
+
+                var user = await _userManager.FindByEmailAsync(registerModel.Username);
+                if (user != null)
+                {
+                    return _jsonResponse.GenerateJsonResult(false, AccountMessage.AlreadyRegisterd);
+                }
+                user = new User()
+                {
+                    Email = registerModel.Username,
+                    UserName = registerModel.Username,
+                    FirstName = registerModel.FirstName,
+                    LastName = registerModel.LastName,
+                    Address = registerModel.Location,
+                    IsActive = true,
+                    IsDeleted = false,
+                    CreatedDate = DateTime.UtcNow
+                };
+
+                var result = await _userManager.CreateAsync(user, registerModel.Password);
+                if (!result.Succeeded)
+                {
+                    return _jsonResponse.GenerateJsonResult(false, AccountMessage.AlreadyRegisterd);
+                }
+                await _userManager.AddToRoleAsync(user, registerModel.Role);
+
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                try
+                {
+                    var mailContent = await PrepareEmailTemplateAsync(user.Email, code, user.FirstName + " " + user.LastName, "ConfirmEmail");
+                    await _emailService.SendMailAsync(registerModel.FirstName + " " + registerModel.LastName, user.Email, "", "Pyarrana- Confirm Email", mailContent, "");
+                }
+                catch (Exception ex)
+                {
+                    return _jsonResponse.GenerateJsonResult(false, AccountMessage.RegisterEmailNotSent);
+                }
+
+                return _jsonResponse.GenerateJsonResult(true, AccountMessage.RegisterSuccessfully);
+            }
+            catch (Exception ex)
+            {
+                var error = new
+                {
+                    ErrorMessage = ex.Message,
+                    InnerMessage = ex.InnerException?.Message,
+                    //ex.StackTrace
+                };
+                return _jsonResponse.GenerateJsonResult(false, ErrorMessage.UnhandledError, error);
+            }
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody]LoginModel inputModel)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return _jsonResponse.GenerateJsonResult(false, ErrorMessage.InvalidModel);
+
+                var result = await _signInManager.PasswordSignInAsync(inputModel.Email, inputModel.Password, false, false);
+
+                if (!result.Succeeded)
+                {
+                    return _jsonResponse.GenerateJsonResult(false, AccountMessage.InvalidLogin);
+                }
+
+                var user = await _userManager.FindByEmailAsync(inputModel.Email);
+
+                var roles = await _userManager.GetRolesAsync(user);
+                var role = (Role)Enum.Parse(typeof(Role), roles[0]);
+
+                if (!user.EmailConfirmed)
+                {
+                    return _jsonResponse.GenerateJsonResult(false, AccountMessage.ConfirmEmail);
+                }
+
+                if (!user.IsActive || user.IsDeleted)
+                {
+                    return _jsonResponse.GenerateJsonResult(false, AccountMessage.AccountClosed);
+                }
+
+                var tokenBuilder = new JwtTokenBuilder()
+                                    .AddSecurityKey(JwtSecurityKey.Create())
+                                    .AddSubject("token authentication")
+                                    .AddIssuer("Fiver.Security.Bearer")
+                                    .AddAudience("Fiver.Security.Bearer")
+                                    .AddClaim("MembershipId", "111", roles)
+                                    .AddExpiry(3600)
+                                    .Build();
+                var data = new
+                {
+                    Id = user.Id,
+                    Username = user.UserName,
+                    Email = user.Email,
+                    Token = tokenBuilder.Value,
+                    FullName = user.FirstName + " " + user.LastName,
+                    RoleId = (int)role,
+                    Validity = tokenBuilder.ValidTo
+                };
+                return _jsonResponse.GenerateJsonResult(true, AccountMessage.LoginSuccessfully, data);
+            }
+            catch (Exception ex)
+            {
+                var error = new
+                {
+                    ErrorMessage = ex.Message,
+                    InnerMessage = ex.InnerException?.Message,
+                    //ex.StackTrace
+                };
+                return _jsonResponse.GenerateJsonResult(false, ErrorMessage.UnhandledError, error);
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("Check/LoggedIn")]
+        public IActionResult CheckAlreadyLoggedIn()
+        {
+            if (User.Identity.IsAuthenticated)
+                return _jsonResponse.GenerateJsonResult(true, AccountMessage.AlreadyLogin);
+
+            return _jsonResponse.GenerateJsonResult(false);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery]string email, string code)
+        {
+            if (string.IsNullOrEmpty(email) || code == null)
+                return _jsonResponse.GenerateJsonResult(false, ErrorMessage.InvalidLink);
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            code = WebUtility.UrlDecode(code);
+            code = code.Replace(' ', '+');
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (!result.Succeeded)
+                return _jsonResponse.GenerateJsonResult(false, ErrorMessage.LinkExpired);
+            else
+                return _jsonResponse.GenerateJsonResult(true, AccountMessage.EmailConfirm);
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("ForgetPassword")]
+        public async Task<IActionResult> ForgetPassword([FromBody]ForgetPasswordModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return _jsonResponse.GenerateJsonResult(false, ErrorMessage.InvalidModel);
+
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    return _jsonResponse.GenerateJsonResult(false, AccountMessage.EmailNotFound);
+                }
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var mailContent = await PrepareEmailTemplateAsync(user.Email, code, user.FirstName + " " + user.LastName, "ResetPassword");
+               await _emailService.SendMailAsync(user.FirstName + " " + user.LastName, user.Email, "", "Pyarrana- Reset Password", mailContent, "");
+                return _jsonResponse.GenerateJsonResult(true, AccountMessage.EmailResetPassword);
+            }
+            catch (Exception ex)
+            {
+                var error = new
+                {
+                    ErrorMessage = ex.Message,
+                    InnerMessage = ex.InnerException?.Message,
+                    //ex.StackTrace
+                };
+                return _jsonResponse.GenerateJsonResult(false, ErrorMessage.UnhandledError, error);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromQuery]string email, string code)
+        {
+            if (string.IsNullOrEmpty(email) || code == null)
+                return _jsonResponse.GenerateJsonResult(false, ErrorMessage.InvalidLink);
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return _jsonResponse.GenerateJsonResult(false, AccountMessage.EmailNotFound);
+            }
+
+            code = WebUtility.UrlDecode(code);
+            code = code.Replace(' ', '+');
+            //var result = await _userManager.Reset
+            var responseData = new ConfirmEmailResponseModel()
+            {
+                Email = user.Email,
+                ResetCode = code
+            };
+            return _jsonResponse.GenerateJsonResult(true, "", responseData);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("SetPassword")]
+        public async Task<IActionResult> SetPassword([FromBody]SetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return _jsonResponse.GenerateJsonResult(false, ErrorMessage.InvalidModel);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return _jsonResponse.GenerateJsonResult(false, AccountMessage.EmailNotFound);
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                return _jsonResponse.GenerateJsonResult(true, AccountMessage.PasswordChanged);
+            }
+            else if (result.Errors.Any())
+                return _jsonResponse.GenerateJsonResult(false, AccountMessage.PasswordNotChanged, result.Errors);
+
+            return _jsonResponse.GenerateJsonResult(false, ErrorMessage.UnhandledError);
+        }
+
+        [HttpGet]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return _jsonResponse.GenerateJsonResult(true, AccountMessage.LogoutSuccessfully);
+        }
+
+
+
+        #region Helper Methods
+        private async Task<string> PrepareEmailTemplateAsync(string email, string code, string fullName, string process)
+        {
+            var templateStr = "";
+
+            var currHttpScheme = _httpContext.HttpContext.Request.Scheme;
+            var currHost = _httpContext.HttpContext.Request.Host.Value;
+            var currHostUrl = currHttpScheme + "://" + currHost;
+
+            var EmailRouteUrlPart = string.Empty;
+
+            if (process.Equals("ConfirmEmail"))
+            {
+                EmailRouteUrlPart = "/#/account/confirmaccount?email=[email]&code=[code]";
+            }
+            else if (process.Equals("ResetPassword"))
+            {
+                EmailRouteUrlPart = "/#/account/resetpassword?email=[email]&code=[code]";
+            }
+
+            var callbackUrl = "javascript:void(0)";
+            if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(email))
+            {
+                callbackUrl =
+                    currHostUrl +
+                    EmailRouteUrlPart
+                        .Replace("[email]", WebUtility.UrlEncode(email))
+                        .Replace("[code]", WebUtility.UrlEncode(code));
+            }
+
+            try
+            {
+                var emailTemplatefile = _appCommon.EmailTemplateFilePath;
+
+                using (var reader = new StreamReader(emailTemplatefile))
+                    templateStr = await reader.ReadToEndAsync();
+            }
+            catch (Exception ex) { }
+
+            var content = string.Empty;
+            var buttonName = string.Empty;
+            if (process.Equals("ConfirmEmail"))
+            {
+                content = "Thanks for signing up with Pyarana! <br>" +
+                "You can verify your email account by clicking on following button.<br><br>";
+                buttonName = "Confirm Email";
+            }
+            else if (process.Equals("ResetPassword"))
+            {
+                buttonName = "Reset Password";
+                content =
+              "We've received a request to reset the password of your account. <br>" +
+              "If you didn't make the request, ignore this email. Otherwise, you can reset your password by clicking on following button:<br><br>";
+            }
+
+
+            var confirmButton = "<a href=" + callbackUrl + " style='font-size: 14px;color: #fff;background: #54c5cd;border: none;padding: 15px 25px;font-weight: 500;line-height: 16px;display: inline-block;border-radius: 3px;min-width: 180px;text-transform: uppercase;text-align: center;letter-spacing: 1px;text-decoration:none;'>" + buttonName + "</a>";
+
+            templateStr =
+               templateStr
+               .Replace("{UserName}", fullName)
+               .Replace("{Mail Content}", content)
+               .Replace("{ConfirmButton}", confirmButton);
+            return templateStr;
+        }
+        #endregion
+    }
+}

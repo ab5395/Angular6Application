@@ -1,0 +1,25 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var AppRoute = /** @class */ (function () {
+    function AppRoute() {
+    }
+    AppRoute.prefix = "/#/";
+    //Without prefix
+    AppRoute.home = "home";
+    AppRoute.login = "account/login";
+    AppRoute.register = "account/register";
+    AppRoute.resetpassword = "account/resetpassword";
+    AppRoute.forgetpassword = "account/forgetpassword";
+    AppRoute.aboutus = "aboutus";
+    AppRoute.contactus = "contactus";
+    //With prefix
+    AppRoute.homeP = AppRoute.prefix + AppRoute.home;
+    AppRoute.loginP = AppRoute.prefix + AppRoute.login;
+    AppRoute.resgiterP = AppRoute.prefix + AppRoute.register;
+    AppRoute.resetpasswordP = AppRoute.prefix + AppRoute.resetpassword;
+    AppRoute.forgetpasswordP = AppRoute.prefix + AppRoute.forgetpassword;
+    AppRoute.contactP = AppRoute.prefix + AppRoute.contactus;
+    return AppRoute;
+}());
+exports.AppRoute = AppRoute;
+//# sourceMappingURL=AppRoute.js.map

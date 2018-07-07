@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var AccountManagementApi = /** @class */ (function () {
+    function AccountManagementApi() {
+    }
+    AccountManagementApi.login = "api/Account/login";
+    AccountManagementApi.register = "api/Account/Register";
+    return AccountManagementApi;
+}());
+exports.AccountManagementApi = AccountManagementApi;
+//# sourceMappingURL=api.url.js.map

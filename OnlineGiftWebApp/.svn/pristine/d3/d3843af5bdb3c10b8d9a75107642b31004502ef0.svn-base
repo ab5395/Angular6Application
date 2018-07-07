@@ -1,0 +1,170 @@
+$great-vibes: 'Great Vibes', cursive;
+$light-gray : #dedede;
+$muted : #6c757d;
+$dark :#221f2d;
+$fixed-menu-size : 86px;
+$white : #ffffff;
+$green-2 : rgba(84, 197, 205,0.2);
+$green : #54c5cd;
+$poppins-family: 'Poppins', sans-serif ;
+/*hrishabh*/
+.friend-listing-div {
+    margin-bottom: 5rem;
+}
+.all-center{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    margin: auto !important;
+}
+.friendlist-row {
+    margin: 0 -7.5px;
+}
+.col-4-div {
+    padding: 0 7.5px;
+    margin-bottom: 15px;
+}
+$friend-list-card-height : 219px;
+mat-card.friendlist-card.mat-card {
+
+        padding: 0;
+        border-radius: 6px;
+        overflow: hidden;
+.friendlist-image-div{
+    height: $friend-list-card-height;
+    img{
+        min-width: 100%;
+        height: $friend-list-card-height;
+    }
+}
+    
+    .friendlist-name {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        background: #221f2d82;
+        color:$white;
+        padding: 10px;
+        transition: all 0.5s;
+        -webkit-transition: all 0.5s;
+    }
+    .friendlist-overlay {
+        background: rgba(0, 0, 0, 0) -webkit-linear-gradient(left, rgba(0, 0, 0, 0.58), rgba(84, 197, 205, 0.47));
+        opacity: 0;
+        transition: all 0.5s;
+        -webkit-transition: all 0.5s;
+    }
+    .send-gift-button {
+        box-shadow: none;
+        height: 30px;
+        transform: scale(0);
+        -webkit-transform: scale(0);
+        color: #ffffff;
+        transition: all 0.5s;
+        -webkit-transition: all 0.5s;
+        width: 100px;
+        border-radius: 20px;
+        outline: none;
+        line-height: 0;
+    }
+    button.send-gift-button:before {
+        position: absolute;
+        left: -5px;
+        content: "";
+        right: -5px;
+        top: -5px;
+        bottom: -5px;
+        z-index: -1;
+        border: 5px solid $green;
+        border-radius: 30px;
+        opacity: 0.54;
+        
+    }
+}
+
+mat-card.friendlist-card.mat-card:hover .send-gift-button{
+    transform:  scale(1);
+    -webkit-transform: scale(1);
+}
+mat-card.friendlist-card.mat-card:hover .friendlist-overlay{
+    opacity: 1;
+}
+mat-card.friendlist-card.mat-card:hover .friendlist-name{
+    background: $green;
+}
+
+
+.express-love-sec {
+    text-align: center;
+    font-size: 15px;
+
+    .expresslove-title {
+        p {
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 500;
+
+            span{
+                color: $green;
+            }
+        }
+        h2{
+            span{
+                font-family: $great-vibes;
+            }
+        }
+    }
+    .express-love-content {
+        max-width: 770px;
+        margin: 0 auto;
+        color: $muted;
+    }
+    .click-connect {
+        padding: 25px 0;
+        border: 1px solid #dedede;
+        border-width: 1px 0;
+        margin: 40px auto;
+        max-width: 770px;
+
+        p {
+            color: $muted;
+        }
+
+        button.site-default {
+            border-radius: 30px;
+            color: $white;
+            outline: none;
+            font-size: 16px;
+            height:52px;
+            width: 285px;
+            box-shadow: none;
+
+            span{
+                font-family: $great-vibes;
+                font-size: 25px;
+            }
+        }
+        button.site-default:before {
+            content: "";
+            position: absolute;
+            left: -8px;
+            right: -8px;
+            top: -8px;
+            bottom: -8px;
+            z-index: -1;
+            border: 10px solid #54c5cd3b;
+            border-radius: 50px;
+        }
+        
+    }
+    .logo-bottom img {
+        max-width: 160px;
+        margin-bottom: 50px;
+    }
+}
+
+

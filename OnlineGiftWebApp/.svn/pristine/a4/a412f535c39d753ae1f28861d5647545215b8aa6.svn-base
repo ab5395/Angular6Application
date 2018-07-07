@@ -1,0 +1,67 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder,  Validators } from '@angular/forms';
+import { ValidationService } from "../../shared/services/validation.service"
+import { ForgetPasswordModel } from "./forgetpassword.model";
+import { ForgetPasswordService } from "./forgetpassword.service";
+import { AppConfig } from "../../app.config";
+import { Router } from "@angular/router";
+import { MatSnackBar } from "@angular/material";
+import { NotificationService } from '../../shared/services/notification.service';
+import { Role } from '../../shared/models/role.enum';
+//import { ErrorData } from '../error/error.data';
+import { AppRoute } from '../../shared/AppRoute';
+
+
+@Component({
+  selector: 'app-forget-password',
+  templateUrl: './forget-password.component.html',
+  styleUrls: ['./forget-password.component.css'],
+  providers: [ForgetPasswordService]
+})
+export class ForgetPasswordComponent implements OnInit {
+  frmForgetPassword: any;
+  notificationService: NotificationService;
+  appConfig: AppConfig = new AppConfig();
+  isProgressVisible: boolean = false;
+  isBtnDisabled: boolean = false;
+  constructor(
+    private formBuilder: FormBuilder,
+    private forgetPasswordService: ForgetPasswordService,
+    private _router: Router,
+    private snb: MatSnackBar,
+    //private errorData: ErrorData
+  ) {
+    this.notificationService = new NotificationService(snb);
+    this.frmForgetPassword = this.formBuilder.group({
+      'email': ['', [Validators.required, ValidationService.emailValidator]]
+    });
+  }
+
+  ngOnInit() {
+  }
+
+  forgetPassword() {
+    let model: ForgetPasswordModel = new ForgetPasswordModel();
+    model.email = this.frmForgetPassword.value.email;
+    
+    if (this.frmForgetPassword.dirty && this.frmForgetPassword.valid) {
+      this.isProgressVisible = true;
+      this.isBtnDisabled = true;
+      this.forgetPasswordService.doForgetPassword(model).subscribe(result => {
+        
+        this.isProgressVisible = false;
+        this.isBtnDisabled = false;
+        if (result.status === true) {
+          this.notificationService.showNotification(result.message);
+        }
+        else if (result.status === false) {
+          this.notificationService.showNotification(result.message);
+        }
+        else {
+          this.notificationService.showNotification("Some error occured while processing your request!! Please try again");
+        }
+      });
+    };
+  }
+
+}
